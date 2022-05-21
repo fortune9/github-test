@@ -2,7 +2,7 @@ name: Scheduled actions
 
 on:
     schedule:
-        - cron: "0/5 * * * *"
+        - cron: "1 12 * * 5" # every friday, noon time
 
 jobs:
     cron-job:
