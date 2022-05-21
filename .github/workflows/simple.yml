@@ -1,0 +1,21 @@
+name: test workflow
+
+on: [push, pull_request]
+
+
+jobs:
+    run-shell-command:
+        runs-on: ubuntu-latest
+        steps:
+            - name: echo a string
+              run: echo "Hello from github actions"
+            - name: multiline script
+              run: |
+                  ls
+                  echo $PATH
+    second-job:
+        runs-on: ubuntu-latest
+        steps:
+            - name: step 1 in job 2
+              run: echo "This is step 1 in job 2"
+
