@@ -2,14 +2,13 @@ name: Scheduled actions
 
 on:
     schedule:
-        - cron: "0 17 * * *"
+        - cron: "0/5 * * * *"
 
 jobs:
     cron-job:
         runs-on: ubuntu-latest
         steps:
             - name: step 1
-              id: step-id
               run: echo "This is a cron job"
 
 
