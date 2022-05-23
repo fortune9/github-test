@@ -2,14 +2,32 @@ name: Build/push docker image
 
 on:
     push:
-        tags:
-            - '*' # all tags without '/'
+    #        tags:
+    #        - '*' # all tags without '/'
 
 jobs:
     publish-docker:
         runs-on: ubuntu-latest
         steps:
-            - name: just a test
-              run: echo "${{ github.ref }}"
+            - name: checkout
+              uses: actions/checkout@v3
+            - name: login dockerhub
+              env:
+                  DH_USER: ${{ secrets.DOCKERHUB_USER }}
+                  DH_PASS: ${{ secrets.DOCKERHUB_PASSWORD }}
+              run: |
+                  docker login -u "$DH_USER" -p "$DH_PASS"
+            - name: Get docker meta
+              id: meta
+              uses: docker/metadata-action@v4
+              with:
+                  images: fortune9/auto-hello
+                  #- name: Build image
+                  #run docker build . --file Dockerfile
+            - name: Show docker meta
+              run: |
+                  echo "Tags: ${{ steps.meta.outputs.tags }}"
+                  echo "Labels: ${{ steps.meta.outputs.labels }}"
+                  echo "Version: ${{ steps.meta.outputs.version }}"
 
 
