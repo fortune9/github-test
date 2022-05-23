@@ -28,16 +28,15 @@ jobs:
                   #run docker build . --file Dockerfile
             - name: Show docker meta
               id: show_meta
-              env:
-                  REPO_TAG: ${{ steps.meta.outputs.version }}
               run: |
                   echo "Tags: ${{ steps.meta.outputs.tags }}"
                   echo "Labels: ${{ steps.meta.outputs.labels }}"
                   # USE $GITHUB_ENV to share environment variables
                   # across steps
                   echo "REPO_TAG1=${{ steps.meta.outputs.version }}" >> $GITHUB_ENV
+                  echo "::set-output name=REPO_TAG::${{ steps.meta.outputs.tags }}"
             - name: Build and push docker
               run: |
                   echo "I can see REPO_TAG1 as $REPO_TAG1"
-                  echo "I can see env.REPO_TAG as ${{ env.REPO_TAG }}"
+                  echo "I can see steps.show_meta.outputs.REPO_TAG as ${{ steps.show_meta.outputs.REPO_TAG }}"
 
