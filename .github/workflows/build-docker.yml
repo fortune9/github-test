@@ -1,0 +1,16 @@
+name: Build/push docker image
+
+on:
+    push:
+        branches: [master]
+        tags:
+
+jobs:
+    publish-docker:
+        if: startsWith(github.ref, 'refs/tags/') # trigger only when new tags
+        runs-on: ubuntu-latest
+        steps:
+            - name: just a test
+              run echo "${{ github.ref }}"
+
+
