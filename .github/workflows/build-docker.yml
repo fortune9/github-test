@@ -2,11 +2,13 @@ name: Build/push docker image
 
 on:
     push:
-    #        tags:
-    #        - '*' # all tags without '/'
+        #        tags:
+        #    - '*' # all tags without '/'
 
 jobs:
     publish-docker:
+        env:
+            IMAGE_NAME: fortune9/auto-hello
         runs-on: ubuntu-latest
         steps:
             - name: checkout
@@ -21,13 +23,16 @@ jobs:
               id: meta
               uses: docker/metadata-action@v4
               with:
-                  images: fortune9/auto-hello
+                  images: "$IMAGE_NAME"
                   #- name: Build image
                   #run docker build . --file Dockerfile
             - name: Show docker meta
+              env:
+                  REPO_TAG: ${{ steps.meta.outputs.version }}
               run: |
                   echo "Tags: ${{ steps.meta.outputs.tags }}"
                   echo "Labels: ${{ steps.meta.outputs.labels }}"
-                  echo "Version: ${{ steps.meta.outputs.version }}"
-
+            - name: Build and push docker
+              run: |
+                  echo "I can see REPO_TAG as $REPO_TAG"
 
