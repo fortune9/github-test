@@ -23,7 +23,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v4
               with:
-                  images: "$IMAGE_NAME"
+                  images: "${{ env.IMAGE_NAME }}"
                   #- name: Build image
                   #run docker build . --file Dockerfile
             - name: Show docker meta
