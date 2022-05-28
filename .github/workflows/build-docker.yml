@@ -31,7 +31,7 @@ jobs:
                   #- name: Build image
                   #run docker build . --file Dockerfile
             - name: Show docker meta
-              if ${{ steps.meta.outputs.tags != "" }}
+              if: ${{ steps.meta.outputs.tags != "" }}
               id: show_meta
               run: |
                   echo "Tags: ${{ steps.meta.outputs.tags }}"
