@@ -5,6 +5,7 @@ on:
         paths:
             - 'Dockerfile'
             - 'environment.yml'
+            - '.github/workflows/build-docker.yml'
 
 jobs:
     publish-docker:
@@ -32,7 +33,7 @@ jobs:
             - name: Show version number
               id: show_version
               run: |
-                  echo "Version for dockerImage.version: ${{ steps.get_versions.versions}}"
+                  echo "Version for dockerImage.version: ${{ fromJSON(steps.get_versions.versions) }}"
             - name: Build and push docker
               run: |
                   #docker build -t $IMAGE_NAME:$REPO_TAG .
