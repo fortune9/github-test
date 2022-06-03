@@ -1,9 +1,8 @@
 {
-    "dockerImage": {
-        "latest" : "0.0.1"
-    },
-    "pipeline": {
-        "latest" : "0.1.0"
-    }
+  "dockerImage": {
+    "latest": "0.0.1"
+  },
+  "pipeline": {
+    "latest": "0.1.0"
+  }
 }
-
