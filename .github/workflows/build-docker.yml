@@ -34,11 +34,12 @@ jobs:
               id: show_version
               run: |
                   echo "Version for dockerImage.version: ${{ fromJSON(steps.get_versions.outputs.versions).dockerImage.latest }}"
-                  echo "Version for dockerImage.version: ${{ fromJSON(steps.get_versions.outputs.versions).pipeline }}"
+                  echo "Version for dockerImage.version: ${{ toJSON(fromJSON(steps.get_versions.outputs.versions).pipeline) }}"
             - name: Build and push docker
               run: |
                   #docker build -t $IMAGE_NAME:$REPO_TAG .
                   #docker image push $IMAGE_NAME:$REPO_TAG
-                  echo "I can see PATH as $(cat $GITHUB_PATH)"
+                  res1=$(cat "$GITHUB_PATH")
+                  echo "I can see PATH as $res1"
                   echo "I can see PATH as $PATH"
 
