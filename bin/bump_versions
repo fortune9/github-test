@@ -25,7 +25,7 @@ cran_install<-function(pkg) {
 		suppressMessages(
 			install.packages(
 				pkg,
-				dependencies=T,
+				dependencies=F,
 				quiet=T,
 				repos="https://cloud.r-project.org"
 				)
@@ -59,6 +59,9 @@ bump_version<-function(ver, pos=c("patch", "minor", "major")) {
     return( paste0(parts, collapse="."))
 }
 
+newLibPath<-"~/RLib"
+dir.create(newLibPath)
+.libPaths(c(newLibPath, .libPaths()))
 load_package("jsonlite")
 load_package("optparse")
 load_package("glue")
@@ -99,7 +102,9 @@ option_list<-list(
         type="character", dest="versionPos", default="patch",
         help=paste_str(
             "which part of the version number to bump. Choices are",
-            "'major','minor', and 'patch'. [%default]")
+            "'major','minor','patch'. Alternatively, one can provide",
+            "'file', meaning reading the value from a tag named 'nextUpdate'",
+            "in the input file [%default]")
     ),
 
     make_option(c("--outfile"), action="store",
@@ -142,6 +147,10 @@ if(is.na(version)) { # bump version
     #print(versions)
     latestVersion<-versions[[zone]]$latest
     stopifnot(!is.null(latestVersion))
+    if(versionPos == "file") {
+        stopifnot(!is.null(versions[[zone]]$nextUpdate))
+        versionPos<-tolower(versions[[zone]]$nextUpdate)
+    }
     version<-bump_version(latestVersion, pos=versionPos)
     message(glue("Version before bump: {latestVersion}"))
     message(glue("Version after bump: {version}"))
