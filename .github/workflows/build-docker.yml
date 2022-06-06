@@ -10,7 +10,7 @@ on:
 jobs:
     publish-docker:
         env:
-            IMAGE_NAME: fortune9/git-actions-env:
+            IMAGE_NAME: fortune9/git-actions-env
         runs-on: ubuntu-latest
         steps:
             - name: checkout
@@ -50,6 +50,7 @@ jobs:
             - name: Build and push docker
               uses: docker/build-push-action@v3
               with:
+                  push: true
                   tags: |
                       $IMAGE_NAME:$newVersion
                       $IMAGE_NAME:latest
