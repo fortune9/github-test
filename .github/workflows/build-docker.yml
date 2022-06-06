@@ -10,7 +10,7 @@ on:
 jobs:
     publish-docker:
         env:
-            IMAGE_NAME: fortune9/auto-hello
+            IMAGE_NAME: fortune9/git-actions-env:
         runs-on: ubuntu-latest
         steps:
             - name: checkout
@@ -48,10 +48,9 @@ jobs:
               run: |
                   echo "New version is $newVersion"
             - name: Build and push docker
-              run: |
-                  #docker build -t $IMAGE_NAME:$REPO_TAG .
-                  #docker image push $IMAGE_NAME:$REPO_TAG
-                  res1=$(cat $GITHUB_PATH)
-                  echo "I can see PATH as $res1"
-                  echo "I can see PATH as $PATH"
+              uses: docker/build-push-action@v3
+              with:
+                  tags: |
+                      $IMAGE_NAME:$newVersion
+                      $IMAGE_NAME:latest
 
