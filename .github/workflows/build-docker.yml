@@ -38,6 +38,7 @@ jobs:
               id: show_version
               run: |
                   echo "New version is ${{toJSON(steps.get_versions.outputs)}}"
+                  echo "hello"
                   #echo "newVersion=$newVersion" >> $GITHUB_ENV
             - name: Build and push docker
               if: success()
