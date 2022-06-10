@@ -40,6 +40,6 @@ jobs:
               with:
                   push: true
                   tags: |
-                      ${{env.IMAGE_NAME}}:${{env.newVersion}}
+                      "${{env.IMAGE_NAME}}:$newVersion"
                       ${{env.IMAGE_NAME}}:latest
 
