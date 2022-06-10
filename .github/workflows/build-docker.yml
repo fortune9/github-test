@@ -32,8 +32,8 @@ jobs:
               id: show_version
               run: |
                   echo "New version is $newVersion"
-                  echo "hello"
-                  #echo "newVersion=$newVersion" >> $GITHUB_ENV
+                  echo "hello ${{steps.get_versions.outputs.newVersion}}"
+                  echo "newVersion=$newVersion" >> $GITHUB_ENV
             - name: Build and push docker
               if: success()
               uses: docker/build-push-action@v3
