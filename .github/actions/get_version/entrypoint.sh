@@ -6,7 +6,7 @@ verPos=file
 verFile=versions.json
 newVersion=$(bump_versions \
     --zone=$zone \
-    --version-pos=$verPos
+    --version-pos=$verPos \
     $verFile)
 
 echo "::set-output name=newVersion::$newVersion"
