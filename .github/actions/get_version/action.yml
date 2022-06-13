@@ -11,7 +11,8 @@ outputs:
 
 runs:
     using: 'docker'
-    image: 'Dockerfile'
+    image: docker://fortune9/git-actions-env:latest
+    entrypoint: 'entrypoint.sh'
     args:
         - ${{ inputs.file }}
 
