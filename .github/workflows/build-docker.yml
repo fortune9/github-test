@@ -28,7 +28,6 @@ jobs:
             - name: Get version number
               id: get_versions
               uses: ./.github/actions/get_version
-              # use entrypoint in the github repo
             - name: Show version number
               id: show_version
               run: |
