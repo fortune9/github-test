@@ -28,7 +28,6 @@ jobs:
             - name: Get version number
               id: get_versions
               uses: ./.github/actions/get_version
-              # use entrypoint in the github repo
             - name: Show version number
               id: show_version
               run: |
@@ -38,7 +37,7 @@ jobs:
               env:
                   newVersion: ${{steps.get_versions.outputs.newVersion}}
             - name: Build and push docker
-              if: ${{ ! always() }}
+              if: success()
               uses: docker/build-push-action@v3
               with:
                   push: true
