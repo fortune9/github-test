@@ -1,0 +1,23 @@
+name: Semantic release
+on:
+    push:
+        branches:
+            - 'feature/semantic-release'
+
+jobs:
+    create_release:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup nodeJS
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "16.15"
+            - name: Create a release
+              run: npx semantic-release@18
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+            - name: Clean up
+              run:
+                  echo "Job done"
+ 
