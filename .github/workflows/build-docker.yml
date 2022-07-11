@@ -37,7 +37,7 @@ jobs:
               env:
                   newVersion: ${{steps.get_versions.outputs.newVersion}}
             - name: Build and push docker
-              if: ${{ ! always() }}
+              if: ${{ success() }}
               uses: docker/build-push-action@v3
               with:
                   push: true
