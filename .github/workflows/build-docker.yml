@@ -2,6 +2,15 @@ name: Build/push docker image
 
 on:
     workflow_dispatch:
+        inputs:
+            user:
+                description: "Username"
+                required: false
+                default: 'ZZ'
+                type: choice
+                options:
+                - ZZ
+                - Zymo
     push:
         paths:
             - 'Dockerfile'
@@ -48,4 +57,11 @@ jobs:
                   tags: |
                       ${{env.IMAGE_NAME}}:${{env.newVersion}}
                       ${{env.IMAGE_NAME}}:latest
+            - name: Upload versions.json
+              if: ${{ success() }}
+              run: |
+                  echo "Uploading updated version record file versions.json"
+                  git add versions.json
+                  git commit -m 'updated versions.json'
+                  git push
 
