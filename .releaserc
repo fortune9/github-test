@@ -1,0 +1,10 @@
+branches: ["master", "feature/semantic-release"]
+repositoryUrl: "https://github.com/fortune9/github-test"
+plugins:
+    - "@semantic-release/commit-analyzer"
+    - "@semantic-release/release-notes-generator"
+    - "@semantic-release/github"
+    - ["@semantic-release/exec", {
+      "prepareCmd" : "echo new version ${nextRelease.version}",
+      "publishCmd" : "echo publish package"
+      }]
