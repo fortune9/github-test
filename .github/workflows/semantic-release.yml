@@ -2,7 +2,7 @@ name: Semantic release
 on:
     push:
         branches:
-            - 'feature/semantic-release'
+            - 'master'
 
 jobs:
     create_release:
@@ -21,5 +21,5 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
             - name: Clean up
               run:
-                  echo "Job done"
- 
+                  echo "New release is created"
+
