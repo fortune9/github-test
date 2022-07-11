@@ -20,12 +20,12 @@ jobs:
               with:
                   username: ${{ secrets.DOCKERHUB_USER }}
                   password: ${{ secrets.DOCKERHUB_PASSWORD }}
-            // use a docker action, so the following 2 steps are unneeded      
-            //- name: Add bin to PATH
-            //  run: |
-            //      echo $(realpath bin) >>$GITHUB_PATH
-            //- name: set up R
-            //  uses: r-lib/actions/setup-r@v2
+            # use a docker action, so the following 2 steps are unneeded      
+            #- name: Add bin to PATH
+            #  run: |
+            #      echo $(realpath bin) >>$GITHUB_PATH
+            #- name: set up R
+            #  uses: r-lib/actions/setup-r@v2
             - name: Get version number
               id: get_versions
               uses: ./.github/actions/get_version
