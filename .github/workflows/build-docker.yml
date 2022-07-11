@@ -31,8 +31,6 @@ jobs:
               id: get_versions
               uses: ./.github/actions/get_version
               with:
-                  # override the entrypoint in 
-                  entrypoint: ./update_docker_version.sh
                   file: "./versions.json"
             - name: Show version number
               id: show_version
