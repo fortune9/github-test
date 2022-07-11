@@ -30,7 +30,7 @@ jobs:
               id: get_versions
               uses: ./.github/actions/get_version
               with:
-                  entrypoint: './update_docker_version.sh'
+                  entryPoint: './update_docker_version.sh'
             - name: Show version number
               id: show_version
               run: |

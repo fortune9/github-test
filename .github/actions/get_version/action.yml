@@ -5,6 +5,10 @@ inputs:
         description: 'current version file'
         required: false
         default: 'versions.json'
+    entryPoint: # executable entrypoint
+        description: 'Entrypoint for the docker image git-actions-env'
+        required: false
+        default: './entrypoint.sh'
 outputs:
     newVersion:
         description: "new version number"
@@ -12,7 +16,7 @@ outputs:
 runs:
     using: 'docker'
     image: docker://fortune9/git-actions-env:latest
-    entrypoint: './entrypoint.sh'
+    entrypoint: ${{ inputs.entryPoint }}
     args:
         - ${{ inputs.file }}
 
