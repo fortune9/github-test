@@ -61,6 +61,9 @@ jobs:
               if: ${{ success() }}
               run: |
                   echo "Uploading updated version record file versions.json"
+                  # user.name and user.email is needed
+                  git config --global user.email "fortune9@users.noreply.github.com"
+                  git config --global user.name "git-actions-bot"
                   git add versions.json
                   git commit -m 'updated versions.json'
                   git push
