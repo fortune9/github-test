@@ -1,0 +1,10 @@
+# temporary files
+*.swp
+
+# leftovers of running programs
+nohup.out
+tmp*
+.nextflow*
+work/
+results/
+

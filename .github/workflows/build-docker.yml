@@ -1,0 +1,70 @@
+name: Build/push docker image
+
+on:
+    workflow_dispatch:
+        inputs:
+            user:
+                description: "Username"
+                required: false
+                default: 'ZZ'
+                type: choice
+                options:
+                - ZZ
+                - Zymo
+    push:
+        paths:
+            - 'Dockerfile'
+            - 'environment.yml'
+            - '.github/workflows/build-docker.yml'
+
+jobs:
+    publish-docker:
+        env:
+            IMAGE_NAME: fortune9/git-actions-env
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v3
+            - name: Login dockerhub
+              uses: docker/login-action@v2
+              with:
+                  username: ${{ secrets.DOCKERHUB_USER }}
+                  password: ${{ secrets.DOCKERHUB_PASSWORD }}
+            # use a docker action, so the following 2 steps are unneeded      
+            #- name: Add bin to PATH
+            #  run: |
+            #      echo $(realpath bin) >>$GITHUB_PATH
+            #- name: set up R
+            #  uses: r-lib/actions/setup-r@v2
+            - name: Get version number
+              id: get_versions
+              uses: ./.github/actions/get_version
+              with:
+                  file: "./versions.json"
+            - name: Show version number
+              id: show_version
+              run: |
+                  echo "New version is ${{env.newVersion}}"
+                  echo "hello ${{steps.get_versions.outputs.newVersion}}"
+                  echo "newVersion=$newVersion" >> $GITHUB_ENV
+              env:
+                  newVersion: ${{steps.get_versions.outputs.newVersion}}
+            - name: Build and push docker
+              if: ${{ success() }}
+              uses: docker/build-push-action@v3
+              with:
+                  push: true
+                  tags: |
+                      ${{env.IMAGE_NAME}}:${{env.newVersion}}
+                      ${{env.IMAGE_NAME}}:latest
+            - name: Upload versions.json
+              if: ${{ success() }}
+              run: |
+                  echo "Uploading updated version record file versions.json"
+                  # user.name and user.email is needed
+                  git config --global user.email "fortune9@users.noreply.github.com"
+                  git config --global user.name "git-actions-bot"
+                  git add versions.json
+                  git commit -m 'updated versions.json'
+                  git push
+

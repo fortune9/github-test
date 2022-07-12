@@ -1,0 +1,41 @@
+name: Container Job
+
+on:
+  push:
+      paths: '.github/workflows/test-container.yml'
+
+env:
+  test: "global-value"
+
+jobs:  
+  container:
+    env:
+        jobEnv: "job env"
+    runs-on: ubuntu-latest
+    container:
+      image: 'ubuntu:18.04' # can also use this to test
+      # image: 'ghcr.io/${{ github.repository }}:latest'
+      env: 
+        actor: ${{ github.actor }}
+        testjob: "env in container"
+
+    steps:
+    - uses: actions/checkout@main
+    - name: run ls
+      run: ls
+    # all these below work
+    - name: print global env var
+      run: echo "$test"
+    - name: print job env
+      run: echo "$jobEnv"
+    - name: print 'actor' env var in container
+      run: echo "$actor"
+    - name: print env testjob in container
+      run: echo "$testjob"
+    - name: print directly github actor
+      run: echo "${{ github.actor }}"
+    - name: print repo secret
+      run: echo "${{ secrets.TEST_SECRET }}"
+    - name: condition with root env var
+      if: ${{ env.test == 'value' }}
+      run: echo "$test" 

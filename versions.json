@@ -1,0 +1,10 @@
+{
+  "dockerImage": {
+    "latest": "0.0.3",
+    "nextUpdate": "patch"
+  },
+  "pipeline": {
+    "latest": "0.1.0",
+    "nextUpdate": "patch"
+  }
+}
