@@ -36,9 +36,21 @@ jobs:
     update_release_version:
         needs: create_release
         if: ${{ needs.create_release.outputs.releaseV != '' }}
+        env:
+            newVersion: ${{ needs.create_release.outputs.releaseV }}
         runs-on: ubuntu-latest
+        container: docker://fortune9/git-actions-env:latest
         steps:
             - uses: actions/checkout@v2
             - name: Update version file
-              run: echo "Updating version file"
+              run: |
+                  ./bin/update_versions --zone pipeline --version $newVersion --outfile versions.json versions.json
+                  git config --global user.email "fortune9@users.noreply.github.com"
+                  git config --global user.name "git-actions-bot"
+                  git add versions.json
+                  git commit -m 'updated versions.json'
+                  git push
+            - name: Post version update
+              if: ${{ success() }}
+              run: echo "File versions.json updated"
 

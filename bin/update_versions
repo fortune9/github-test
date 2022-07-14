@@ -1,0 +1,169 @@
+#!/usr/bin/env Rscript
+
+load_package<-function(pkg)
+{
+	if(!suppressPackageStartupMessages(require(pkg, quietly=T, character.only=T, warn.conflicts=F)))
+	{
+		message(sprintf("Package %s doesn't exist; installing it now", pkg))
+		install_package(pkg)
+	}
+	#message(sprintf("Package %s is successfully loaded", pkg))
+}
+
+install_package<-function(pkg)
+{
+	if(cran_install(pkg)) {
+		return(T)
+	} else {
+		stop(sprintf("Package %s can't be installed from CRAN",
+			pkg)
+		)
+	}
+}
+
+cran_install<-function(pkg) {
+		suppressMessages(
+			install.packages(
+				pkg,
+				dependencies=F,
+				quiet=T,
+				repos="https://cloud.r-project.org"
+				)
+			)
+		# return True if sucess, False if failed
+		suppressPackageStartupMessages(
+			require(pkg, quietly=T, character.only=T, warn.conflicts=F)
+			)
+}
+
+paste_str<-function(..., sep=" ", collapse=NULL) {
+    paste(..., sep=sep, collapse=collapse)
+}
+
+read_versions<-function(f, format="json", ...) {
+    format<-match.arg(format)
+    read_json(f, ...)
+}
+
+write_versions<-function(versions, file, format="json") {
+    format<-match.arg(format)
+    write_json(versions, path=file, pretty=T, auto_unbox=T)
+}
+
+bump_version<-function(ver, pos=c("patch", "minor", "major")) {
+    pos<-match.arg(pos)
+    parts<-as.integer(unlist(strsplit(ver, "\\.")))
+    stopifnot(length(parts) == 3)
+    idx<-which(c("major","minor","patch") %in% pos)
+    parts[idx]<-parts[idx]+1
+    return( paste0(parts, collapse="."))
+}
+
+newLibPath<-"~/RLib"
+dir.create(newLibPath)
+.libPaths(c(newLibPath, .libPaths()))
+load_package("jsonlite")
+load_package("optparse")
+load_package("glue")
+
+desc<-"
+This program reads a version file and update the versions
+specified by options.
+
+The version must follow the semantic versioning format, i.e.,
+major.minor.patch and the file need to be in json format.
+"
+
+epiInfo<-"
+Example usage:
+%prog [options] <versions.json>
+Author: Zhenguo Zhang
+Last update: Thu Jul 14 00:00:14 PDT 2022
+"
+
+
+option_list<-list(
+    make_option(c("--zone"), action="store",
+        type="character", dest="zone", default=NA,
+        help=paste_str(
+            "Required. The zone in which the version number will be changed.",
+            "This zone must pre-exist in input file, unless the option",
+            "--version is also provided.")),
+
+    make_option(c("--version"), action="store",
+        type="character", dest="version", default=NA,
+        help=paste_str(
+            "User provided version to replace existing value directly.",
+            "If provided, the process to determine new version won't",
+            "happen"
+            )),
+    
+    make_option(c("--version-pos"), action="store",
+        type="character", dest="versionPos", default="patch",
+        help=paste_str(
+            "which part of the version number to bump. Choices are",
+            "'major','minor','patch'. Alternatively, one can provide",
+            "'file', meaning reading the value from a tag named 'nextUpdate'",
+            "in the input file [%default]")
+    ),
+
+    make_option(c("--outfile"), action="store",
+        type="character", dest="outFile", default=NA,
+        help=paste_str(
+        "If provided, all the versions are written to it. [%default]"
+        )
+    )
+)
+
+optParser<-OptionParser(
+			usage="usage: %prog [options] <versions.json>",
+			option_list=option_list,
+            add_help_option=F,
+            description=desc,
+            epilog=epiInfo)
+
+args<-commandArgs(T);
+
+if(length(args) < 1 || any(args %in% c("-h","--help")))
+	{ print_help(optParser); q("no"); }
+
+
+opt<-parse_args2(optParser, args)
+posArgs<-opt$args
+opt<-opt$options
+zone<-opt$zone
+version<-opt$version
+versionPos<-tolower(opt$versionPos)
+stopifnot(!is.null(zone))
+
+versions<-read_versions(posArgs[1], simplifyVector=T)
+
+if(is.na(version)) { # bump version
+    zoneIdx<-which( tolower(names(versions)) %in% tolower(zone) )
+    if(length(zoneIdx) < 1) {
+        stop(glue("The provided zone '{zone}' doesn't exist in input file"))
+    }
+    zone<-names(versions)[zoneIdx]
+    #print(versions)
+    latestVersion<-versions[[zone]]$latest
+    stopifnot(!is.null(latestVersion))
+    if(versionPos == "file") {
+        stopifnot(!is.null(versions[[zone]]$nextUpdate))
+        versionPos<-tolower(versions[[zone]]$nextUpdate)
+    }
+    version<-bump_version(latestVersion, pos=versionPos)
+    message(glue("Version before bump: {latestVersion}"))
+    message(glue("Version after bump: {version}"))
+    # update original data
+    versions[[zone]]$latest<-version
+} else { # version is provided by user
+    message(glue("User-provided version: {version}"))
+    version<-tolower(version)
+}
+
+if(!is.na(opt$outFile)) {
+    write_versions(versions, file=opt$outFile)
+}
+
+cat(version)
+
