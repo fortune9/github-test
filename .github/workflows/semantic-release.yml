@@ -3,6 +3,7 @@ on:
     push:
         branches:
             - 'master'
+            - 'feature/store-release-number'
 
 jobs:
     create_release:
@@ -16,10 +17,13 @@ jobs:
             - name: Install dependencies
               run: npm install @semantic-release/exec
             - name: Create a release
+              id: create_release
               run: npx semantic-release
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
-            - name: Clean up
+            - name: Success
               run:
-                  echo "New release is created"
+                  echo "New release is created: $releaseV"
+              env:
+                  releaseV: ${{ steps.create_release.outputs.releaseVersion }}
 

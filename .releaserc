@@ -6,5 +6,5 @@ plugins:
     - "@semantic-release/github"
     - ["@semantic-release/exec", {
       "prepareCmd" : "echo new version ${nextRelease.version}",
-      "publishCmd" : "echo publish package"
+      "publishCmd" : "echo '::set-output name=releaseVersion::${nextRelease.version}'"
       }]
