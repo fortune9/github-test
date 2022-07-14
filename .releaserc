@@ -1,4 +1,4 @@
-branches: ["master", "feature/semantic-release"]
+branches: ["master", "feature/store-release-number"]
 repositoryUrl: "https://github.com/fortune9/github-test"
 plugins:
     - "@semantic-release/commit-analyzer"
