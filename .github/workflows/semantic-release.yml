@@ -21,7 +21,7 @@ jobs:
               run: npx semantic-release
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
-            - name: Success
+            - name: Post release
               run: |
                   echo "New release is created: $releaseV"
               env:
