@@ -35,7 +35,7 @@ jobs:
                   releaseV: ${{ steps.create_release.outputs.releaseVersion }}
     update_release_version:
         needs: create_release
-        if: ${{ needs.create_release.outputs.releaseV != ""}}
+        if: ${{ needs.create_release.outputs.releaseV != '' }}
         runs-on: ubuntu-latest
         steps:
             - name: Update version file
