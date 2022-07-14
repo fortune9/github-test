@@ -11,7 +11,7 @@ jobs:
         outputs:
             releaseV: ${{ steps.create_release.outputs.releaseVersion }}
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
             - name: Setup nodeJS
               uses: actions/setup-node@v3
               with:
@@ -41,7 +41,7 @@ jobs:
         runs-on: ubuntu-latest
         container: docker://fortune9/git-actions-env:latest
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
             - name: Update version file
               run: |
                   ./bin/update_versions --zone pipeline --version $newVersion --outfile versions.json versions.json
