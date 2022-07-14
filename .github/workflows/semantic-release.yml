@@ -22,8 +22,8 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
             - name: Success
-              run:
+              run: |
                   echo "New release is created: $releaseV"
               env:
-                  releaseV: "hello"
+                  releaseV: ${{ steps.create_release.outputs.releaseVersion }}
 
