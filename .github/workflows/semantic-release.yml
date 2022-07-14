@@ -8,6 +8,8 @@ on:
 jobs:
     create_release:
         runs-on: ubuntu-latest
+        outputs:
+            releaseV: ${{ steps.create_release.outputs.releaseVersion }}
         steps:
             - uses: actions/checkout@v2
             - name: Setup nodeJS
@@ -22,8 +24,20 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
             - name: Post release
+              if: steps.create_release.outputs.releaseVersion
               run: |
-                  echo "New release is created: $releaseV"
+                  if [[ "$releaseV" == "" ]]; then
+                    echo "No new release with empty version number"
+                  else
+                    echo "Store the version number $releaseV in job update_release_version"
+                  fi
               env:
                   releaseV: ${{ steps.create_release.outputs.releaseVersion }}
+    update_release_version:
+        needs: create_release
+        if: ${{ needs.create_release.outputs.releaseV != ""}}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Update version file
+              run: echo "Updating version file"
 
