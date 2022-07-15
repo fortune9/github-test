@@ -12,7 +12,7 @@ outputs:
 runs:
     using: 'docker'
     image: docker://fortune9/git-actions-env:latest
-    entrypoint: 'bash -c ./update_version.sh'
+    entrypoint: './update_version.sh'
     args:
         - ${{ inputs.params }}
 
