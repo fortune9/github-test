@@ -5,6 +5,10 @@ inputs:
         description: 'current version file'
         required: false
         default: 'versions.json'
+    otherparams: # other parameters
+        description: 'other parameters directly passed to entrypoint'
+        required: false
+        default: ''
 outputs:
     newVersion:
         description: "new version number"
@@ -12,7 +16,8 @@ outputs:
 runs:
     using: 'docker'
     image: docker://fortune9/git-actions-env:latest
-    entrypoint: './update_docker_version.sh'
+    entrypoint: './update_version.sh'
     args:
+        - ${{ inputs.otherparams }}
         - ${{ inputs.file }}
 
