@@ -25,7 +25,7 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
             - name: Update version file
               if: steps.create_release.outputs.releaseVersion
-              uses ./.github/actions/get_version
+              uses: ./.github/actions/get_version
               with:
                   params: --zone pipeline --version $releaseV ./versions.json
               env:
