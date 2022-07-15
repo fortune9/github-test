@@ -23,36 +23,19 @@ jobs:
               run: npx semantic-release
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
-            - name: Post release
+            - name: Update version file
               if: steps.create_release.outputs.releaseVersion
-              run: |
-                  if [[ "$releaseV" == "" ]]; then
-                    echo "No new release with empty version number"
-                  else
-                    echo "Store the version number $releaseV in job update_release_version"
-                  fi
+              uses ./.github/actions/get_version
+              with:
+                  params: --zone pipeline --version $releaseV ./versions.json
               env:
                   releaseV: ${{ steps.create_release.outputs.releaseVersion }}
-    update_release_version:
-        needs: create_release
-        if: ${{ needs.create_release.outputs.releaseV != '' }}
-        env:
-            newVersion: ${{ needs.create_release.outputs.releaseV }}
-        runs-on: ubuntu-latest
-        container: docker://fortune9/git-actions-env:latest
-        steps:
-            - uses: actions/checkout@v3
-            - name: Update version file
+            - name: Upload version file
+              if: steps.create_release.outputs.releaseVersion
               run: |
-                  pwd
-                  which git
-                  ./bin/update_versions --zone pipeline --version $newVersion --outfile versions.json versions.json
                   git config --global user.email "fortune9@users.noreply.github.com"
                   git config --global user.name "git-actions-bot"
                   git add versions.json
                   git commit -m 'updated versions.json'
                   git push
-            - name: Post version update
-              if: ${{ success() }}
-              run: echo "File versions.json updated"
 
