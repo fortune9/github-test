@@ -27,7 +27,7 @@ jobs:
               if: steps.create_release.outputs.releaseVersion
               uses: ./.github/actions/get_version
               with:
-                  params: --zone pipeline --version $releaseV ./versions.json
+                  params: --zone pipeline --version ${{ env.releaseV }} ./versions.json
               env:
                   releaseV: ${{ steps.create_release.outputs.releaseVersion }}
             - name: Upload version file
