@@ -1,6 +1,7 @@
-#!/bin/bash -l
+#!/usr/bin/env bash
 
-echo "Get new version based on current version in versions.json"
+set -e
+set -o pipefail
 
 if [[ $# -lt 2 ]]; then
     echo "Usage: $0 --zone <zone> --ver-pos <verPos> --version"
@@ -40,6 +41,8 @@ if [[ "$zone" == "" ]]; then
     echo "--zone is required"
     exit 2
 fi
+
+echo "Get new version based on current version in $verFile"
 
 if [[ "$version" == "" ]]; then # bump version
     newVersion=$(bump_versions \
