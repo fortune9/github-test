@@ -40,8 +40,9 @@ jobs:
               id: get_versions
               uses: ./.github/actions/get_version
               with:
-                  file: "./versions.json"
-                  otherparams: "--zone dockerImage --ver-pos file"
+                  args: --zone dockerImage --ver-pos file ./versions.json
+                  #file: "./versions.json"
+                  #otherparams: "--zone dockerImage --ver-pos file"
             - name: Show version number
               id: show_version
               run: |
