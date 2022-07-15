@@ -43,7 +43,6 @@ jobs:
               with:
                   params: --zone dockerImage --ver-pos file ./versions.json
                   #file: "./versions.json"
-                  #otherparams: "--zone dockerImage --ver-pos file"
             - name: Show version number
               id: show_version
               run: |

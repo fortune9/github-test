@@ -3,6 +3,10 @@
 set -e
 set -o pipefail
 
+if [[ $# -eq 1 ]]; then
+    set -- $@
+fi
+
 if [[ $# -lt 2 ]]; then
     echo "Usage: $0 --zone <zone> --ver-pos <verPos> --version"
     echo "<version> <input-file>"
