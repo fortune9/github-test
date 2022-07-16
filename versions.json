@@ -4,7 +4,7 @@
     "nextUpdate": "patch"
   },
   "pipeline": {
-    "latest": "0.1.0",
+    "latest": "1.3.2",
     "nextUpdate": "patch"
   }
 }
