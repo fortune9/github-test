@@ -16,7 +16,6 @@ on:
             - 'Dockerfile'
             - 'environment.yml'
             - '.github/workflows/build-docker.yml'
-            - '.github/actions/get_version/action.yml'
 
 jobs:
     publish-docker:
