@@ -1,10 +1,10 @@
 name: 'Get new version'
 description: 'Get a new version number to bump up'
 inputs:
-    file: # version file
-        description: 'current version file'
+    params: # other parameters
+        description: 'parameters directly passed to entrypoint'
         required: false
-        default: 'versions.json'
+        default: ''
 outputs:
     newVersion:
         description: "new version number"
@@ -12,7 +12,7 @@ outputs:
 runs:
     using: 'docker'
     image: docker://fortune9/git-actions-env:latest
-    entrypoint: './update_docker_version.sh'
+    entrypoint: './update_version.sh'
     args:
-        - ${{ inputs.file }}
+        - ${{ inputs.params }}
 

@@ -3,12 +3,15 @@ on:
     push:
         branches:
             - 'master'
+            - 'feature/store-release-number'
 
 jobs:
     create_release:
         runs-on: ubuntu-latest
+        outputs:
+            releaseV: ${{ steps.create_release.outputs.releaseVersion }}
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
             - name: Setup nodeJS
               uses: actions/setup-node@v3
               with:
@@ -16,10 +19,23 @@ jobs:
             - name: Install dependencies
               run: npm install @semantic-release/exec
             - name: Create a release
+              id: create_release
               run: npx semantic-release
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
-            - name: Clean up
-              run:
-                  echo "New release is created"
+            - name: Update version file
+              if: steps.create_release.outputs.releaseVersion
+              uses: ./.github/actions/get_version
+              with:
+                  params: --zone pipeline --version ${{ env.releaseV }} ./versions.json
+              env:
+                  releaseV: ${{ steps.create_release.outputs.releaseVersion }}
+            - name: Upload version file
+              if: steps.create_release.outputs.releaseVersion
+              run: |
+                  git config --global user.email "fortune9@users.noreply.github.com"
+                  git config --global user.name "git-actions-bot"
+                  git add versions.json
+                  git commit -m 'updated versions.json'
+                  git push
 

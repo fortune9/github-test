@@ -67,7 +67,7 @@ load_package("optparse")
 load_package("glue")
 
 desc<-"
-This program reads a version file and bumps the version
+This program reads a version file and update the versions
 specified by options.
 
 The version must follow the semantic versioning format, i.e.,
@@ -78,13 +78,13 @@ epiInfo<-"
 Example usage:
 %prog [options] <versions.json>
 Author: Zhenguo Zhang
-Last update: Thu Jun  2 23:49:52 PDT 2022
+Last update: Thu Jul 14 00:00:14 PDT 2022
 "
 
 
 option_list<-list(
     make_option(c("--zone"), action="store",
-        type="character", dest="zone", default=NULL,
+        type="character", dest="zone", default=NA,
         help=paste_str(
             "Required. The zone in which the version number will be changed.",
             "This zone must pre-exist in input file, unless the option",
@@ -136,17 +136,14 @@ version<-opt$version
 versionPos<-tolower(opt$versionPos)
 stopifnot(!is.null(zone))
 
-# read a list from json-format file
 versions<-read_versions(posArgs[1], simplifyVector=T)
 
-zoneIdx<-which( tolower(names(versions)) %in% tolower(zone) )
 if(is.na(version)) { # bump version
-    # get zone index in the list
+    zoneIdx<-which( tolower(names(versions)) %in% tolower(zone) )
     if(length(zoneIdx) < 1) {
         stop(glue("The provided zone '{zone}' doesn't exist in input file"))
     }
     zone<-names(versions)[zoneIdx]
-
     #print(versions)
     latestVersion<-versions[[zone]]$latest
     stopifnot(!is.null(latestVersion))
@@ -162,13 +159,6 @@ if(is.na(version)) { # bump version
 } else { # version is provided by user
     message(glue("User-provided version: {version}"))
     version<-tolower(version)
-    # update the version number too
-    # this could be a new zone
-    if(length(zoneIdx) < 1) {
-        versions[[zone]]<-list(latest=version, nextUpdate="patch")
-    } else { # just update the version number
-        versions[[zone]]$latest<-version
-    }
 }
 
 if(!is.na(opt$outFile)) {

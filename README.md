@@ -4,11 +4,14 @@ github-test
 [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
 
-A test repository for GitHub
+This is a sandbox repository to test different features of github.
 
-1. first item
+So far, we have done the following test:
 
-2. second
-   item
+- CI
+    * semantic release
+    * building docker image
 
-3. third item
+- Basic git operations
+
+

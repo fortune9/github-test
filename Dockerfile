@@ -8,6 +8,7 @@ RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
 	parallel \
     gawk \
+    git-all \
 	&& apt-get clean
 
 RUN R -e "install.packages('jsonlite', quiet=T, dependencies=NA, repos='https://cran.rstudio.com')"
